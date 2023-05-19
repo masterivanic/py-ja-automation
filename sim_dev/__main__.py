@@ -13,7 +13,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
-    # conf = AppConfiguration()
-    # val = conf._check_command_file_exists()
-    # print(val)
+    # main()
+    func = FileManagement()._search_project_directory(directory_name="simcore-packag")
+    func()
