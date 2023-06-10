@@ -11,7 +11,7 @@ from sim_dev.config import AppConfiguration
 from sim_dev.file import FileManagement
 
 app: Typer = Typer()
-file: FileManagement = FileManagement()
+file: FileManagement = FileManagement(directory_name="/home/simco-dev")
 
 
 class CliCommand:

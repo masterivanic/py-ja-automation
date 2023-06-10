@@ -2,10 +2,15 @@
  this is the entrypoint of our application
  define as module
 """
+from pathlib import Path
+
 from sim_dev import __app_name__
 from sim_dev import cli
+from sim_dev import GlobalVar
 from sim_dev.config import AppConfiguration
+from sim_dev.file import DirectoryTree
 from sim_dev.file import FileManagement
+from sim_dev.file import Folder
 
 
 def main() -> None:
@@ -14,5 +19,23 @@ def main() -> None:
 
 if __name__ == "__main__":
     # main()
-    func = FileManagement()._search_project_directory(directory_name="simcore-packag")
-    func()
+    # folder = Folder(folder_path=Path(GlobalVar.LINUX_HOME_DIR.value))
+    # FileManagement().find_path("sim-dev")
+
+    # With a criteria (skip hidden files)
+    # def is_not_hidden(path):
+    #     return not path.name.startswith(".")
+
+    # paths = DirectoryTree.make_tree(Path("/home/simco-dev"), criteria=is_not_hidden)
+    # for path in paths:
+    #     if path.displayname == "sim_dev":
+    #         print("dossier trouvé " + path.displayname)
+    #         print(path.root_path.absolute())
+    #         break
+    #     else:
+    #         print("ce n'est pas encore çà " + path.displayname)
+
+    # directory = DirectoryTree(root_path=Path(GlobalVar.LINUX_HOME_DIR.value))
+    # print(directory.format_tree())
+    file = FileManagement(directory_name="simenu")
+    print(file.get_directory_path())
