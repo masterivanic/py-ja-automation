@@ -31,6 +31,7 @@ class GlobalVar(Enum):
     BASE_DIR: Final[Path] = Path(__file__).resolve().parent.absolute()
     POETRY_PROJECT: Final[str] = "poetry"
     PIP_PROJECT: Final[str] = "pip"
+    SPRING_PROJECT_MAVEN: Final[str] = "mvnw"
     HOME_DIR: str
     LINUX_HOME_DIR: Final[str] = os.path.abspath(os.environ["HOME"])
     INTERACTIVE_MODE: Final[int] = 0

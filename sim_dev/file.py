@@ -101,16 +101,11 @@ class FileManagement:
         self._directory_name: Union[
             WindowsPath, PosixPath, None
         ] = self._search_project_directory(directory_name)
-        print(
-            self._directory_name,
-            type(self._directory_name),
-            "completed path of our project",
-        )
 
     @property
-    def get_directory_path(self):
+    def get_directory_path(self) -> str:
         """to check, this raise NoneType Error and block app execution"""
-        return self._directory_name
+        return self._directory_name.as_posix()
 
     def is_not_hidden(self, path):
         return not path.name.startswith(".")
@@ -162,7 +157,10 @@ class FileManagement:
         return file_full_path
 
     def _check_docker_file(self) -> bool:
-        pass
+        file_list: List[str] = os.listdir(self.get_directory_path)
+        if "Dockerfile" in file_list:
+            return True
+        return False
 
     def _open_and_launch_project(self):
         pass
@@ -173,12 +171,22 @@ class FileManagement:
             state = GlobalVar.POETRY_PROJECT.value
         elif "requirements.txt" in files:
             state = GlobalVar.PIP_PROJECT.value
+        elif "mvnw" in files:
+            state = GlobalVar.SPRING_PROJECT_MAVEN.value
         else:
             state = None
-        raise state
+        return state
 
-    def _activate_project_env(self):
-        pass
+    def read_commands_file() -> dict:
+        import json
+
+        with open("./sim_dev/commands/commands.json", "r") as file:
+            data = json.load(file)
+
+    def _activate_project_env(self) -> None:
+        project = self._check_project_type()
+        if project == "poetry":
+            pass
 
     def _deactivate_project_env(self):
         pass

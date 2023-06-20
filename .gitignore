@@ -1,3 +1,6 @@
 
 # list of our intern commands
 sim_dev/commands/*
+.vscode
+.pytest_cache
+poetry.lock

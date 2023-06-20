@@ -1,4 +1,4 @@
-### Python SIMCO Project automation for launch
+### Project automation for launch
 
 1. detect app according to his type: poetry app or pip app
 2. install dependencies
@@ -11,3 +11,4 @@
 
 7. for backend setup env var for launch it: after
 typer==0.3.2 colorama==0.4.4 shellingham==1.4.0
+# py-ja-automation
