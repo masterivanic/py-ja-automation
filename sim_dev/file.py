@@ -1,3 +1,4 @@
+import json
 import os
 import shlex
 import subprocess
@@ -6,6 +7,8 @@ from pathlib import PosixPath
 from pathlib import WindowsPath
 from subprocess import CompletedProcess
 from typing import Any
+from typing import Callable
+from typing import Dict
 from typing import Generator
 from typing import List
 from typing import Union
@@ -90,6 +93,44 @@ class DirectoryTree:
             count += 1
 
 
+class ReadCommandMeta(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            instance = super().__call__(*args, **kwargs)
+            cls._instances[cls] = instance
+        return cls._instances[cls]
+
+
+class ReadCommandSingleton(metaclass=ReadCommandMeta):
+    def __init__(self, path_default: str = "./sim_dev/commands/commands.json") -> None:
+        with open(path_default, "r") as file:
+            self.data: Dict = json.load(file)
+
+    def execute_cli_command(function: Callable):
+        def inner(command: str):
+            args = shlex.split(command)
+            processus: CompletedProcess[str] = subprocess.run(
+                args, encoding="utf-8", text=True, stdout=subprocess.PIPE
+            )
+            try:
+                if (_ := processus.returncode) == 0:
+                    print("run successfully")
+            except ChildProcessError as err:
+                raise Exception(err.strerror)
+
+        return inner
+
+    @execute_cli_command
+    def activate_python_project(self, command: str):
+        pass
+
+    @execute_cli_command
+    def git_command(self, command: str):
+        pass
+
+
 class FileManagement:
     """os service management"""
 
@@ -101,6 +142,7 @@ class FileManagement:
         self._directory_name: Union[
             WindowsPath, PosixPath, None
         ] = self._search_project_directory(directory_name)
+        self.command_executor = ReadCommandSingleton
 
     @property
     def get_directory_path(self) -> str:
@@ -133,13 +175,8 @@ class FileManagement:
         except KeyError:
             raise Exception("System error!")
 
-    def _check_git_installation(self) -> bool:
-        cmd_line = "git --version"
-        args = shlex.split(cmd_line)
-        processus: CompletedProcess[str] = subprocess.run(
-            args, encoding="utf-8", text=True, stdout=subprocess.PIPE
-        )
-        return True if processus.returncode == 0 else False
+    def _check_git_installation(self) -> None:
+        self.command_executor.git_command("git --version")
 
     def _search_project_directory(self, directory_name: str) -> Any:
         """
@@ -176,12 +213,6 @@ class FileManagement:
         else:
             state = None
         return state
-
-    def read_commands_file() -> dict:
-        import json
-
-        with open("./sim_dev/commands/commands.json", "r") as file:
-            data = json.load(file)
 
     def _activate_project_env(self) -> None:
         project = self._check_project_type()

@@ -38,5 +38,4 @@ if __name__ == "__main__":
     # directory = DirectoryTree(root_path=Path(GlobalVar.LINUX_HOME_DIR.value))
     # print(directory.format_tree())
     file = FileManagement(directory_name="simenu")
-    print(file.get_directory_path, type(file.get_directory_path))
-    print(file._check_docker_file(), "is content docker file::")
+    file._check_git_installation()
