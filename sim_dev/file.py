@@ -108,6 +108,10 @@ class ReadCommandSingleton(metaclass=ReadCommandMeta):
         with open(path_default, "r") as file:
             self.data: Dict = json.load(file)
 
+    @property
+    def get_data(self) -> Dict:
+        return self.data
+
     def execute_cli_command(function: Callable):
         def inner(command: str):
             args = shlex.split(command)
@@ -123,12 +127,21 @@ class ReadCommandSingleton(metaclass=ReadCommandMeta):
         return inner
 
     @execute_cli_command
+    def install_dependecies(self, command: str):
+        ...
+
+    @execute_cli_command
     def activate_python_project(self, command: str):
-        pass
+        ...
+
+    @execute_cli_command
+    def deactivate_python_project(self, command: str):
+        ...
 
     @execute_cli_command
     def git_command(self, command: str):
-        pass
+        """use for check git installation"""
+        ...
 
 
 class FileManagement:
@@ -217,10 +230,36 @@ class FileManagement:
     def _activate_project_env(self) -> None:
         project = self._check_project_type()
         if project == "poetry":
+            self.command_executor.activate_python_project(
+                command=self.command_executor.get_data["python_command"]["poetry-shell"]
+            )
+        elif project == "pip":
+            if (value := input("Give path of your virtual env: ")) is not None:
+                command = value + "/" + "activate"
+                path = Path(command)
+                if path.exists():
+                    self.command_executor.activate_python_project(command=command)
+                else:
+                    print("path given is incorrect or does not exist")
+
+        elif project == "mvnw":
+            # TO DO in maven case
             pass
 
     def _deactivate_project_env(self):
-        pass
+        project = self._check_project_type()
+        if project == "poetry":
+            self.command_executor.deactivate_python_project(
+                command=self.command_executor.get_data["os_command"]["deactivate-env"]
+            )
+        elif project == "pip":
+            if (value := input("Give path of your virtual env: ")) is not None:
+                command = value + "/" + "deactivate"
+                path = Path(command)
+                if path.exists():
+                    self.command_executor.activate_python_project(command=command)
+                else:
+                    print("path given is incorrect or does not exist")
 
     def _launch_docker_db(self):
         pass
@@ -233,7 +272,15 @@ class FileManagement:
         pass
 
     def _install_project_dependencies(self):
-        pass
+        project = self._check_project_type()
+        if project == "pip":
+            self.command_executor.install_dependecies(
+                self.command_executor.get_data["python_command"]["pip-install-req"]
+            )
+        elif project == "poetry":
+            self.command_executor.install_dependecies(
+                self.command_executor.get_data["python_command"]["poetry_install"]
+            )
 
 
 if __name__ == "__main__":
