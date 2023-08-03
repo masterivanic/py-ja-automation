@@ -10,18 +10,18 @@ from sim_dev import __version__
 from sim_dev.config import AppConfiguration
 from sim_dev.file import FileManagement
 
-app: Typer = Typer()
+app: Typer = Typer(help="Awesome CLI python management app")
+state = {"verbose": False}
 file: FileManagement = FileManagement(directory_name="/home/simco-dev")
 
 
-class CliCommand:
-    def __init__(self, app_configuration: AppConfiguration = AppConfiguration) -> None:
-        self._app_configuration = None
+class CliCommand(Typer(help="Awesome CLI python management ap")):
+    def __init__(self) -> None:
+        self._app_configuration = AppConfiguration()
 
-    def _app_version(value: bool) -> None:
-        if value:
-            typer.echo(f"{__app_name__} v{__version__} made by {__author__}")
-            raise typer.Exit()
+    def _app_version() -> None:
+        typer.echo(f"{__app_name__} v{__version__} made by {__author__}")
+        raise typer.Exit()
 
     def _app_directory_project(dir_project: str):
         file._check_git_installation()
@@ -35,7 +35,7 @@ class CliCommand:
             typer.secho(f"{dir_project} don't exist", color=typer.colors.RED)
             raise typer.Exit(1)
 
-    @app.callback()
+    @app.command()
     def main(
         version: Optional[bool] = typer.Option(
             None,
@@ -46,16 +46,16 @@ class CliCommand:
             is_eager=True,
         )
     ) -> None:
-        return
+        print("Will write verbose output")
 
-    # @app.callback()
-    # def app_dir(
-    #     version: Optional[str] = typer.Option(
-    #         None,
-    #         "--project-dir",
-    #         help="List of all projetcs",
-    #         callback=_app_directory_project,
-    #         is_eager=True,
-    #     )
-    # ) -> None:
-    #     return
+    @app.command()
+    def app_dir(
+        version: Optional[str] = typer.Option(
+            None,
+            "--project-dir",
+            help="List of all projetcs",
+            callback=_app_directory_project,
+            is_eager=True,
+        )
+    ) -> None:
+        return

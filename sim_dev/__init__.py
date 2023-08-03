@@ -6,7 +6,7 @@ from typing import Final
 
 __app_name__ = "sim_dev"
 __version__ = "0.0.1"
-__author__ = "SIMCO"
+__author__ = "Ivanic"
 
 (
     SUCCESS,

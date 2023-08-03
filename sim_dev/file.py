@@ -112,7 +112,7 @@ class ReadCommandSingleton(metaclass=ReadCommandMeta):
     def get_data(self) -> Dict:
         return self.data
 
-    def execute_cli_command(function: Callable):
+    def execute_cli_command(function: Callable) -> Callable[[str], Any]:
         def inner(command: str):
             args = shlex.split(command)
             processus: CompletedProcess[str] = subprocess.run(
@@ -120,7 +120,7 @@ class ReadCommandSingleton(metaclass=ReadCommandMeta):
             )
             try:
                 if (_ := processus.returncode) == 0:
-                    print("run successfully")
+                    print("successfull execute!")
             except ChildProcessError as err:
                 raise Exception(err.strerror)
 
@@ -234,7 +234,7 @@ class FileManagement:
                 command=self.command_executor.get_data["python_command"]["poetry-shell"]
             )
         elif project == "pip":
-            if (value := input("Give path of your virtual env: ")) is not None:
+            if value := input("Give path of your virtual env: "):
                 command = value + "/" + "activate"
                 path = Path(command)
                 if path.exists():

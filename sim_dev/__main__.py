@@ -4,17 +4,20 @@
 """
 from pathlib import Path
 
+import typer
+
 from sim_dev import __app_name__
-from sim_dev import cli
 from sim_dev import GlobalVar
+from sim_dev.cli import CliCommand
 from sim_dev.config import AppConfiguration
 from sim_dev.file import DirectoryTree
 from sim_dev.file import FileManagement
 from sim_dev.file import Folder
 
 
-def main() -> None:
-    cli.app(prog_name=__app_name__)
+def main():
+    CliCommand()
+    # print("Hello World")
 
 
 if __name__ == "__main__":
@@ -37,5 +40,6 @@ if __name__ == "__main__":
 
     # directory = DirectoryTree(root_path=Path(GlobalVar.LINUX_HOME_DIR.value))
     # print(directory.format_tree())
-    file = FileManagement(directory_name="simenu")
-    file._check_git_installation()
+    main()
+    # file = FileManagement(directory_name="simenu")
+    # file._check_git_installation()
